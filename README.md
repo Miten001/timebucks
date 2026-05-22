@@ -4,14 +4,29 @@ A Telegram bot with **6 mini-games**, coin economy, daily bonus, refer & earn, a
 
 ## 🕹️ Games Included
 
+### 🎮 Free Games (no bet, pure skill/luck → coins)
+
 | # | Game | How it works | Reward |
 |---|------|--------------|--------|
 | 1 | 🧠 Quiz | 5 questions across 5 categories (GK, Bollywood, Cricket, Tech, Hindi) | 10 coins per correct |
-| 2 | 🎯 Number Guess | Bot picks 1-100, user has 7 tries with hints | 10-200 coins (less per try) |
+| 2 | 🎯 Number Guess | Bot picks 1-100, user has 7 tries with hi/lo hints | 10-200 coins (less per try) |
 | 3 | 🪨📄✂️ Rock Paper Scissors | Best of 3 vs bot | 30 coins on win |
-| 4 | 🪙 Coin Flip | Bet coins on heads/tails | 2x bet on win |
-| 5 | 🎲 Dice Battle | Higher dice roll wins | 2x bet on win |
-| 6 | ➗ Math Quick | 5 quick math MCQs | 10 coins per correct |
+| 4 | ➗ Math Quick | 5 quick math MCQs | 10 coins per correct |
+| 5 | 🔤 Word Scramble | Unscramble word from hint, 2 tries | 30 coins |
+| 6 | ⭕❌ Tic Tac Toe | 3x3 grid vs smart-ish bot AI | 25 (win) / 5 (draw) |
+| 7 | 🎬 Emoji Quiz | Guess what 5 emoji combos mean | 25 coins per correct |
+
+### 💰 Betting Games (risk coins → bigger payouts)
+
+| # | Game | How it works | Payout |
+|---|------|--------------|--------|
+| 8 | 🪙 Coin Flip | Bet on heads/tails | 2x bet |
+| 9 | 🎲 Dice Battle | User vs bot, higher wins | 2x bet |
+| 10 | 🎰 Slot Machine | 3 reels of fruit/jackpot symbols | up to **50x** (7️⃣7️⃣7️⃣) |
+| 11 | 🃏 Hi-Lo Cards | Predict if next card is higher / lower | 2x bet |
+| 12 | 🎨 Color Prediction | 🔴 Red / 🟢 Green / 🟣 Violet | 2x or 5x |
+| 13 | 🎡 Lucky Wheel | Spin a weighted wheel | up to **20x** (jackpot) |
+| 14 | 🚀 Aviator Crash | Pick auto cash-out target before flight | up to **50x** target |
 
 ## 💰 How You Earn
 
@@ -115,8 +130,11 @@ When a user has ≥ `MIN_REDEEM_COINS` (default 5000):
 
 ## 🛠️ Future Add-ons
 
-- Word Scramble game
 - Trivia tournaments with prizes
 - Telegram Stars premium tier (ad-free + bonus coins)
 - Mini App (HTML5) version with Adsgram ads
 - Auto-payout via Razorpay / Cashfree API
+- Hangman game
+- Type Race
+- Riddles
+- Admin panel for redemption approvals

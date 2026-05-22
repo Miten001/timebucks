@@ -52,16 +52,8 @@ logger = logging.getLogger(__name__)
 def main_menu_kb() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🧠 Quiz", callback_data="game:quiz"),
-            InlineKeyboardButton("🎯 Number Guess", callback_data="game:guess"),
-        ],
-        [
-            InlineKeyboardButton("🪨📄✂️ RPS", callback_data="game:rps"),
-            InlineKeyboardButton("🪙 Coin Flip", callback_data="game:coinflip"),
-        ],
-        [
-            InlineKeyboardButton("🎲 Dice", callback_data="game:dice"),
-            InlineKeyboardButton("➗ Math Quick", callback_data="game:math"),
+            InlineKeyboardButton("🎮 Free Games", callback_data="menu:free"),
+            InlineKeyboardButton("💰 Betting Games", callback_data="menu:betting"),
         ],
         [
             InlineKeyboardButton("👤 Profile", callback_data="menu:profile"),
@@ -75,6 +67,48 @@ def main_menu_kb() -> InlineKeyboardMarkup:
             InlineKeyboardButton("💸 Redeem", callback_data="menu:redeem"),
             InlineKeyboardButton("ℹ️ Help", callback_data="menu:help"),
         ],
+    ])
+
+
+def free_games_kb() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("🧠 Quiz", callback_data="game:quiz"),
+            InlineKeyboardButton("🎯 Number Guess", callback_data="game:guess"),
+        ],
+        [
+            InlineKeyboardButton("🪨📄✂️ RPS", callback_data="game:rps"),
+            InlineKeyboardButton("➗ Math Quick", callback_data="game:math"),
+        ],
+        [
+            InlineKeyboardButton("🔤 Word Scramble", callback_data="game:word"),
+            InlineKeyboardButton("⭕❌ Tic Tac Toe", callback_data="game:ttt"),
+        ],
+        [
+            InlineKeyboardButton("🎬 Emoji Quiz", callback_data="game:emoji"),
+        ],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="menu:main")],
+    ])
+
+
+def betting_games_kb() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("🪙 Coin Flip", callback_data="game:coinflip"),
+            InlineKeyboardButton("🎲 Dice", callback_data="game:dice"),
+        ],
+        [
+            InlineKeyboardButton("🎰 Slot Machine", callback_data="game:slot"),
+            InlineKeyboardButton("🃏 Hi-Lo Cards", callback_data="game:hilo"),
+        ],
+        [
+            InlineKeyboardButton("🎨 Color Predict", callback_data="game:color"),
+            InlineKeyboardButton("🎡 Lucky Wheel", callback_data="game:wheel"),
+        ],
+        [
+            InlineKeyboardButton("🚀 Aviator Crash", callback_data="game:aviator"),
+        ],
+        [InlineKeyboardButton("🏠 Main Menu", callback_data="menu:main")],
     ])
 
 
@@ -218,6 +252,24 @@ async def callback_router(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         await query.edit_message_text(
             main_menu_text(user_row), reply_markup=main_menu_kb(), parse_mode="HTML"
+        )
+        return
+
+    if data == "menu:free":
+        await query.edit_message_text(
+            "🎮 <b>Free Games</b>\nKhelo aur coins kamao (no bet):",
+            reply_markup=free_games_kb(),
+            parse_mode="HTML",
+        )
+        return
+
+    if data == "menu:betting":
+        u = db.get_user(update.effective_user.id)
+        await query.edit_message_text(
+            f"💰 <b>Betting Games</b>\nCoins lagao, jeeto big!\n\n"
+            f"💳 Balance: <b>{u['coins'] if u else 0}</b>",
+            reply_markup=betting_games_kb(),
+            parse_mode="HTML",
         )
         return
 
@@ -386,6 +438,78 @@ async def callback_router(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await games.math_answer(update, context, int(data.split(":", 1)[1]))
         return
 
+    # ── Slot Machine ──
+    if data == "game:slot":
+        await games.slot_menu(update, context)
+        return
+    if data.startswith("slot_bet:"):
+        await games.slot_play(update, context, int(data.split(":", 1)[1]))
+        return
+
+    # ── Tic Tac Toe ──
+    if data == "game:ttt":
+        await games.ttt_start(update, context)
+        return
+    if data == "ttt:noop":
+        return  # ignore clicks on filled cells
+    if data.startswith("ttt:"):
+        await games.ttt_play(update, context, int(data.split(":", 1)[1]))
+        return
+
+    # ── Hi-Lo Cards ──
+    if data == "game:hilo":
+        await games.hilo_menu(update, context)
+        return
+    if data.startswith("hilo_bet:"):
+        await games.hilo_choose_dir(update, context, int(data.split(":", 1)[1]))
+        return
+    if data.startswith("hilo_dir:"):
+        await games.hilo_play(update, context, data.split(":", 1)[1])
+        return
+
+    # ── Color Prediction ──
+    if data == "game:color":
+        await games.color_menu(update, context)
+        return
+    if data.startswith("color_bet:"):
+        await games.color_choose(update, context, int(data.split(":", 1)[1]))
+        return
+    if data.startswith("color_pick:"):
+        await games.color_play(update, context, data.split(":", 1)[1])
+        return
+
+    # ── Lucky Wheel ──
+    if data == "game:wheel":
+        await games.wheel_menu(update, context)
+        return
+    if data.startswith("wheel_bet:"):
+        await games.wheel_play(update, context, int(data.split(":", 1)[1]))
+        return
+
+    # ── Word Scramble ──
+    if data == "game:word":
+        await games.word_start(update, context)
+        return
+
+    # ── Emoji Quiz ──
+    if data == "game:emoji":
+        await games.emoji_start(update, context)
+        return
+    if data.startswith("emoji_ans:"):
+        await games.emoji_answer(update, context, int(data.split(":", 1)[1]))
+        return
+
+    # ── Aviator Crash ──
+    if data == "game:aviator":
+        await games.aviator_menu(update, context)
+        return
+    if data.startswith("av_bet:"):
+        await games.aviator_choose_target(update, context, int(data.split(":", 1)[1]))
+        return
+    if data.startswith("av_target:"):
+        await games.aviator_play(update, context, float(data.split(":", 1)[1]))
+        return
+
     # Fallback
     await query.answer("Unknown action", show_alert=True)
 
@@ -400,6 +524,10 @@ async def text_router(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Number-guess game uses text input
     if await games.guess_handle_text(update, context):
+        return
+
+    # Word Scramble uses text input
+    if await games.word_handle_text(update, context):
         return
 
     # Redeem flow
