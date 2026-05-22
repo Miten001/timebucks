@@ -1,6 +1,13 @@
 # 🎮 Telegram Mini-Games Bot
 
-A Telegram bot with **6 mini-games**, coin economy, daily bonus, refer & earn, and force-subscribe sponsor channels — your **monetization mechanism**.
+A Telegram bot with **14 mini-games**, coin economy, daily bonus, refer & earn, and force-subscribe sponsor channels — your **monetization mechanism**.
+
+## ⚡ ONE-CLICK DEPLOY
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Miten001/timebucks)
+[![Run on Replit](https://replit.com/badge/github/Miten001/timebucks)](https://replit.com/new/github/Miten001/timebucks)
+
+After clicking: just paste your `BOT_TOKEN` in environment variables and your bot is live.
 
 ## 🕹️ Games Included
 
