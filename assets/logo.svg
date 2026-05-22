@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Gradient background -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   style="stop-color:#7C3AED"/>
+      <stop offset="50%"  style="stop-color:#EC4899"/>
+      <stop offset="100%" style="stop-color:#F97316"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   style="stop-color:#FFE066"/>
+      <stop offset="100%" style="stop-color:#FFA500"/>
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Rounded rectangle background -->
+  <rect x="0" y="0" width="512" height="512" rx="96" fill="url(#bgGrad)"/>
+
+  <!-- Floating decorative shapes -->
+  <circle cx="80"  cy="100" r="20" fill="#FFFFFF" opacity="0.15"/>
+  <circle cx="440" cy="80"  r="14" fill="#FFFFFF" opacity="0.20"/>
+  <circle cx="60"  cy="430" r="10" fill="#FFFFFF" opacity="0.25"/>
+  <circle cx="460" cy="450" r="22" fill="#FFFFFF" opacity="0.15"/>
+
+  <!-- Game controller silhouette -->
+  <g transform="translate(256, 175)" filter="url(#shadow)">
+    <!-- Body -->
+    <rect x="-90" y="-30" width="180" height="65" rx="32" fill="#FFFFFF" opacity="0.95"/>
+    <!-- D-pad -->
+    <rect x="-65" y="-10" width="30" height="10" rx="3" fill="#7C3AED"/>
+    <rect x="-55" y="-20" width="10" height="30" rx="3" fill="#7C3AED"/>
+    <!-- Buttons (right side) -->
+    <circle cx="55" cy="-5"  r="7" fill="#EC4899"/>
+    <circle cx="70" cy="10"  r="7" fill="#F97316"/>
+    <circle cx="40" cy="10"  r="7" fill="#10B981"/>
+    <circle cx="55" cy="25"  r="7" fill="#3B82F6"/>
+  </g>
+
+  <!-- MOBI text -->
+  <text x="256" y="320"
+        font-family="Impact, 'Arial Black', sans-serif"
+        font-size="110"
+        font-weight="900"
+        text-anchor="middle"
+        fill="url(#goldGrad)"
+        stroke="#000"
+        stroke-width="4"
+        filter="url(#shadow)"
+        letter-spacing="6">MOBI</text>
+
+  <!-- GAMES text -->
+  <text x="256" y="410"
+        font-family="Impact, 'Arial Black', sans-serif"
+        font-size="80"
+        font-weight="900"
+        text-anchor="middle"
+        fill="#FFFFFF"
+        stroke="#000"
+        stroke-width="3"
+        filter="url(#shadow)"
+        letter-spacing="8">GAMES</text>
+
+  <!-- Coin emojis -->
+  <g transform="translate(80, 280)" opacity="0.85">
+    <circle r="22" fill="url(#goldGrad)" stroke="#8B6914" stroke-width="3"/>
+    <text y="8" font-size="24" font-weight="900" text-anchor="middle" fill="#8B6914">$</text>
+  </g>
+  <g transform="translate(432, 280)" opacity="0.85">
+    <circle r="22" fill="url(#goldGrad)" stroke="#8B6914" stroke-width="3"/>
+    <text y="8" font-size="24" font-weight="900" text-anchor="middle" fill="#8B6914">$</text>
+  </g>
+
+  <!-- Bottom tagline -->
+  <text x="256" y="460"
+        font-family="Arial, sans-serif"
+        font-size="22"
+        font-weight="700"
+        text-anchor="middle"
+        fill="#FFFFFF"
+        opacity="0.9"
+        letter-spacing="4">PLAY • EARN • WIN</text>
+</svg>
