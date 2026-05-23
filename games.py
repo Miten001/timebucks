@@ -41,6 +41,30 @@ async def edit_or_send(update: Update, text: str, reply_markup=None):
         await target.reply_text(text, reply_markup=reply_markup, parse_mode="HTML")
 
 
+async def alert_no_state(
+    update: Update,
+    msg: str = "❌ Ye game khatam ho gaya, ya kisi aur user ne start kiya tha.\n👉 /start dabake apna khud ka game shuru karo!",
+) -> None:
+    """Show a popup alert without editing the original message.
+
+    Group-friendly: when User B clicks User A's inline button, B's
+    `context.user_data` is empty for that game. Instead of overwriting
+    A's quiz message with a "state khatam" error, we show a private
+    popup to B and leave A's game intact.
+    """
+    if update.callback_query:
+        try:
+            await update.callback_query.answer(msg, show_alert=True)
+            return
+        except Exception:
+            pass
+    if update.effective_message:
+        try:
+            await update.effective_message.reply_text(msg)
+        except Exception:
+            pass
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 1) QUIZ GAME
 # ─────────────────────────────────────────────────────────────────────────────
@@ -72,7 +96,7 @@ async def quiz_start(update: Update, context: ContextTypes.DEFAULT_TYPE, categor
 async def quiz_send_question(update: Update, context: ContextTypes.DEFAULT_TYPE):
     state = context.user_data.get("quiz")
     if not state:
-        await edit_or_send(update, "Quiz state khatam ho gaya. /start dabao.")
+        await alert_no_state(update)
         return
 
     idx = state["index"]
@@ -89,7 +113,7 @@ async def quiz_send_question(update: Update, context: ContextTypes.DEFAULT_TYPE)
 async def quiz_answer(update: Update, context: ContextTypes.DEFAULT_TYPE, choice: int):
     state = context.user_data.get("quiz")
     if not state:
-        await edit_or_send(update, "Quiz over ho gaya. /start dabao.")
+        await alert_no_state(update)
         return
     idx = state["index"]
     _, options, correct_idx = state["questions"][idx]
@@ -238,7 +262,7 @@ async def rps_show(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix: s
 async def rps_play(update: Update, context: ContextTypes.DEFAULT_TYPE, user_choice: str):
     state = context.user_data.get("rps")
     if not state:
-        await rps_start(update, context)
+        await alert_no_state(update)
         return
 
     bot_choice = random.choice(list(RPS_EMOJI.keys()))
@@ -323,7 +347,7 @@ async def coinflip_choose_side(update: Update, context: ContextTypes.DEFAULT_TYP
 async def coinflip_play(update: Update, context: ContextTypes.DEFAULT_TYPE, side: str):
     bet = context.user_data.get("cf_bet")
     if not bet:
-        await coinflip_menu(update, context)
+        await alert_no_state(update)
         return
     if not db.deduct_coins(update.effective_user.id, bet):
         await edit_or_send(update, "❌ Coins kam ho gaye. Game cancel.")
@@ -462,7 +486,7 @@ async def math_send(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def math_answer(update: Update, context: ContextTypes.DEFAULT_TYPE, choice: int):
     state = context.user_data.get("math")
     if not state:
-        await edit_or_send(update, "Game khatam.")
+        await alert_no_state(update)
         return
     is_correct = choice == state["correct_idx"]
     if is_correct:
@@ -641,7 +665,7 @@ async def ttt_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def ttt_play(update: Update, context: ContextTypes.DEFAULT_TYPE, cell: int):
     state = context.user_data.get("ttt")
     if not state:
-        await ttt_start(update, context)
+        await alert_no_state(update)
         return
     board = state["board"]
     if board[cell] is not None:
@@ -737,7 +761,7 @@ async def hilo_choose_dir(update: Update, context: ContextTypes.DEFAULT_TYPE, be
 async def hilo_play(update: Update, context: ContextTypes.DEFAULT_TYPE, direction: str):
     state = context.user_data.get("hilo")
     if not state:
-        await hilo_menu(update, context)
+        await alert_no_state(update)
         return
     bet = state["bet"]
     current = state["card"]
@@ -831,7 +855,7 @@ async def color_choose(update: Update, context: ContextTypes.DEFAULT_TYPE, bet: 
 async def color_play(update: Update, context: ContextTypes.DEFAULT_TYPE, picked: str):
     bet = context.user_data.get("color_bet")
     if not bet:
-        await color_menu(update, context)
+        await alert_no_state(update)
         return
     user_id = update.effective_user.id
     if not db.deduct_coins(user_id, bet):
@@ -1092,7 +1116,7 @@ async def emoji_send(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def emoji_answer(update: Update, context: ContextTypes.DEFAULT_TYPE, choice: int):
     state = context.user_data.get("emoji")
     if not state:
-        await edit_or_send(update, "Game khatam.")
+        await alert_no_state(update)
         return
     i = state["i"]
     emojis, options, correct_idx = state["puzzles"][i]
@@ -1184,7 +1208,7 @@ async def aviator_choose_target(update: Update, context: ContextTypes.DEFAULT_TY
 async def aviator_play(update: Update, context: ContextTypes.DEFAULT_TYPE, target: float):
     bet = context.user_data.get("av_bet")
     if not bet:
-        await aviator_menu(update, context)
+        await alert_no_state(update)
         return
     user_id = update.effective_user.id
     if not db.deduct_coins(user_id, bet):

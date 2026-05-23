@@ -186,8 +186,21 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not await require_subscribed(update, context):
         return
 
+    # Show a group-aware hint above the menu when invoked from a group/supergroup
+    is_group = bool(
+        update.effective_chat and update.effective_chat.type in ("group", "supergroup")
+    )
+    intro = main_menu_text(user_row)
+    if is_group:
+        intro = (
+            "👥 <b>Group Play Mode</b>\n"
+            "Har player apna khud ka game khel sakta hai 🎮\n"
+            "Sirf jisne start kiya wo apne buttons dabaye.\n\n"
+            f"{intro}"
+        )
+
     await update.effective_message.reply_text(
-        main_menu_text(user_row),
+        intro,
         reply_markup=main_menu_kb(),
         parse_mode="HTML",
     )
@@ -574,8 +587,9 @@ async def text_router(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 logger.warning("admin notify failed: %s", e)
         return
 
-    # Otherwise show menu hint
-    await update.message.reply_text("👋 /start dabake game khelo!")
+    # Otherwise show menu hint — only in private chats (avoid group spam)
+    if update.effective_chat and update.effective_chat.type == "private":
+        await update.message.reply_text("👋 /start dabake game khelo!")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -601,6 +615,10 @@ def main() -> None:
     app = Application.builder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", cmd_start))
+    # Aliases — better UX in groups where users may type any of these
+    app.add_handler(CommandHandler("play", cmd_start))
+    app.add_handler(CommandHandler("games", cmd_start))
+    app.add_handler(CommandHandler("menu", cmd_start))
     app.add_handler(CommandHandler("balance", cmd_balance))
     app.add_handler(CommandHandler("stats", cmd_stats))
     app.add_handler(CallbackQueryHandler(callback_router))
