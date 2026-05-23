@@ -1,19 +1,18 @@
 services:
-  - type: worker
+  - type: web
     name: mini-games-bot
     runtime: python
-    region: singapore
     plan: free
-    branch: main
     buildCommand: pip install -r requirements.txt
     startCommand: python bot.py
+    healthCheckPath: /
     envVars:
       - key: BOT_TOKEN
-        sync: false      # <-- Aap Render dashboard mein paste karoge
+        sync: false
       - key: ADMIN_ID
-        sync: false      # <-- @userinfobot se aapka Telegram ID
+        sync: false
       - key: SPONSOR_CHANNELS
-        value: ""        # Khali rakho abhi, baad mein add karoge
+        value: ""
       - key: COIN_TO_INR
         value: "0.01"
       - key: MIN_REDEEM_COINS

@@ -14,6 +14,9 @@ Run:
 from __future__ import annotations
 
 import logging
+import os
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
@@ -588,6 +591,12 @@ async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE):
 # ─────────────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    # Start a tiny HTTP healthcheck server in a background thread so that
+    # platforms that require an open port (e.g., Render free Web Service tier)
+    # see this as a healthy service. Telegram polling continues in the main
+    # thread.
+    _start_health_server()
+
     db.init_db()
     app = Application.builder().token(BOT_TOKEN).build()
 
@@ -600,6 +609,45 @@ def main() -> None:
 
     logger.info("Bot starting...")
     app.run_polling(allowed_updates=Update.ALL_TYPES)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Tiny HTTP healthcheck (only used by hosting providers that require a port)
+# ─────────────────────────────────────────────────────────────────────────────
+
+class _HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self):  # noqa: N802
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.end_headers()
+        self.wfile.write(b"OK - Mini Games Bot is alive")
+
+    def log_message(self, *args, **kwargs):  # silence default access logs
+        return
+
+
+def _start_health_server() -> None:
+    port_env = os.environ.get("PORT")
+    if not port_env:
+        # No PORT env var → we're running locally, skip health server.
+        logger.info("PORT not set; skipping healthcheck server")
+        return
+    try:
+        port = int(port_env)
+    except ValueError:
+        logger.warning("Invalid PORT=%s; skipping healthcheck server", port_env)
+        return
+
+    def _serve() -> None:
+        try:
+            server = HTTPServer(("0.0.0.0", port), _HealthHandler)
+            logger.info("Healthcheck HTTP server listening on :%s", port)
+            server.serve_forever()
+        except Exception as exc:  # pragma: no cover
+            logger.warning("Healthcheck server stopped: %s", exc)
+
+    t = threading.Thread(target=_serve, name="healthcheck", daemon=True)
+    t.start()
 
 
 if __name__ == "__main__":
