@@ -603,6 +603,16 @@ async def text_router(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ─────────────────────────────────────────────────────────────────────────────
 
 async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE):
+    # Conflict is logged at WARNING (not ERROR) to avoid huge tracebacks
+    # in Render logs. It usually self-resolves once the duplicate dies.
+    from telegram.error import Conflict
+
+    if isinstance(context.error, Conflict):
+        logger.warning(
+            "Conflict: another bot instance is polling. "
+            "Check Render dashboard for duplicate services or local bot still running."
+        )
+        return
     logger.error("Exception while handling update: %s", context.error, exc_info=context.error)
 
 
@@ -610,9 +620,29 @@ async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE):
 # Main
 # ─────────────────────────────────────────────────────────────────────────────
 
+async def _post_init(app: Application) -> None:
+    """Run once on startup: clear webhook + pending updates to avoid Conflict.
+
+    The 'terminated by other getUpdates request' error is usually caused by:
+      • a stale webhook still set on the bot, OR
+      • a previous instance whose long-poll hasn't timed out yet.
+    Calling delete_webhook(drop_pending_updates=True) fixes both.
+    """
+    try:
+        await app.bot.delete_webhook(drop_pending_updates=True)
+        logger.info("Webhook cleared, pending updates dropped.")
+    except Exception as e:
+        logger.warning("delete_webhook failed: %s", e)
+
+
 def main() -> None:
     db.init_db()
-    app = Application.builder().token(BOT_TOKEN).build()
+    app = (
+        Application.builder()
+        .token(BOT_TOKEN)
+        .post_init(_post_init)
+        .build()
+    )
 
     app.add_handler(CommandHandler("start", cmd_start))
     app.add_handler(CommandHandler("balance", cmd_balance))
@@ -622,7 +652,12 @@ def main() -> None:
     app.add_error_handler(on_error)
 
     logger.info("Bot starting...")
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    # drop_pending_updates=True: ignore messages queued while the bot was down,
+    # so a previous instance's leftover updates don't trigger a Conflict.
+    app.run_polling(
+        allowed_updates=Update.ALL_TYPES,
+        drop_pending_updates=True,
+    )
 
 
 if __name__ == "__main__":
