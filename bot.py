@@ -25,6 +25,7 @@ from telegram.ext import (
     filters,
 )
 
+import arcade
 import database as db
 import games
 from config import (
@@ -54,6 +55,9 @@ def main_menu_kb() -> InlineKeyboardMarkup:
         [
             InlineKeyboardButton("🎮 Free Games", callback_data="menu:free"),
             InlineKeyboardButton("💰 Betting Games", callback_data="menu:betting"),
+        ],
+        [
+            InlineKeyboardButton("🌟 Mega Arcade (1000s of Games)", callback_data="menu:arcade"),
         ],
         [
             InlineKeyboardButton("👤 Profile", callback_data="menu:profile"),
@@ -273,6 +277,24 @@ async def callback_router(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
+    # ── Mega Arcade Hub ──
+    if data == "menu:arcade":
+        await arcade.arcade_main(update, context)
+        return
+    if data == "arc:noop":
+        return
+    if data.startswith("arc:cat:"):
+        # arc:cat:<key>:<page>
+        parts = data.split(":")
+        if len(parts) >= 4:
+            cat_key = parts[2]
+            try:
+                page = int(parts[3])
+            except ValueError:
+                page = 0
+            await arcade.arcade_show_category(update, context, cat_key, page)
+        return
+
     if data == "menu:profile":
         u = db.get_user(update.effective_user.id)
         refs = db.get_referral_count(update.effective_user.id)
@@ -375,7 +397,8 @@ async def callback_router(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if data == "menu:help":
         text = (
             "ℹ️ <b>Help</b>\n\n"
-            "🎮 6 mini games available — har game se coins kamao.\n"
+            "🎮 13+ in-bot mini games — har game se coins kamao.\n"
+            "🌟 <b>Mega Arcade</b>: 500+ curated + 10,000+ portal games (Telegram ke andar khulte hain).\n"
             "🎁 Daily bonus claim karo har din.\n"
             "🤝 Friends ko refer karo — har referral pe bonus.\n"
             f"💸 {MIN_REDEEM_COINS} coins jamake UPI mein redeem karo.\n\n"
