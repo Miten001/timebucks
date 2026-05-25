@@ -1,8 +1,15 @@
-"""Mega Arcade Hub — 500+ curated HTML5 games + access to 10,000+ more.
+"""Mega Arcade Hub — 400+ curated HTML5 games + access to 10,000+ more.
 
-Games launch via Telegram WebApp, opening inside Telegram itself.
-URL pattern used: https://www.crazygames.com/game/{slug}
-For the full portal:    https://www.crazygames.com/
+Games launch as URL buttons (open in user's browser).
+
+Why URL buttons instead of WebApp:
+  • WebApp inline buttons don't render on every Telegram client, esp.
+    Desktop and older mobile versions — users see no button at all.
+  • CrazyGames (and most game portals) send X-Frame-Options: DENY,
+    which blocks them from rendering inside a Telegram WebApp iframe,
+    leaving a blank screen even when the button does appear.
+  • Plain url= buttons render universally and open in the user's
+    default browser, which always works.
 
 Pagination: PAGE_SIZE games per page, organized by category.
 """
@@ -10,12 +17,7 @@ from __future__ import annotations
 
 from typing import List, Tuple
 
-from telegram import (
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Update,
-    WebAppInfo,
-)
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -567,16 +569,16 @@ async def arcade_main(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🎮 <b>Mega Arcade Hub</b>\n\n"
         f"🎯 <b>{total_games()}+ curated games</b> across {len(CATEGORY_META)} categories.\n"
         "🌐 Plus <b>10,000+ games</b> in the Mega Portal!\n\n"
-        "All games khulte hain Telegram ke andar — no app, no download.\n\n"
+        "Game pe tap karoge to aapke <b>browser me khulega</b> 🌐\n\n"
         "👇 Category chuno ya Mega Portal kholo:"
     )
 
     rows = []
-    # Big button to mega portal
+    # Big button to mega portal — opens in browser
     rows.append([
         InlineKeyboardButton(
             "🌟 BROWSE 10,000+ GAMES (Mega Portal)",
-            web_app=WebAppInfo(url=MEGA_PORTAL_URL),
+            url=MEGA_PORTAL_URL,
         )
     ])
     # Categories — 2 per row
@@ -620,13 +622,13 @@ async def arcade_show_category(
         f"{cat_label}\n\n"
         f"📄 Page <b>{page + 1}/{total_pages}</b>  •  "
         f"<b>{len(games)}</b> games\n\n"
-        "Game pe tap karo — Telegram ke andar khulega 🎮"
+        "Game pe tap karo — browser me khulega 🌐"
     )
 
     rows: list[list[InlineKeyboardButton]] = []
     for name, slug in chunk:
         rows.append([
-            InlineKeyboardButton(name, web_app=WebAppInfo(url=_url(slug)))
+            InlineKeyboardButton(name, url=_url(slug))
         ])
 
     # Pagination row
