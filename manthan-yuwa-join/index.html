@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manthan 4 Yuwa — Join the Movement</title>
+  <meta name="description" content="Join Manthan 4 Yuwa, a vibrant youth community. Register with your name, email, phone and city to become a member." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-primary: #FF3D77;
+      --color-secondary: #7C3AED;
+      --color-tertiary: #FFB800;
+      --color-accent-cool: #06B6D4;
+      --color-bg-base: #140F3D;
+      --color-bg-base-2: #2A1065;
+      --color-surface: rgba(255, 255, 255, 0.10);
+      --color-text-strong: #ffffff;
+      --color-text-muted: rgba(255, 255, 255, 0.72);
+      --color-ink: #1b1436;
+      --color-ink-muted: #5b5477;
+      --color-success: #22C55E;
+      --color-error: #FF4D6D;
+      --grad-hero: linear-gradient(135deg, #FF3D77 0%, #7C3AED 48%, #06B6D4 100%);
+      --grad-cta: linear-gradient(100deg, #FF3D77 0%, #FF7A45 55%, #FFB800 100%);
+      --grad-text: linear-gradient(92deg, #FFB800 0%, #FF3D77 45%, #06B6D4 100%);
+      --radius-lg: 26px;
+      --radius-md: 16px;
+      --shadow-glow: 0 24px 70px rgba(124, 58, 237, 0.45);
+      --font-display: 'Poppins', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--color-text-strong);
+      background: radial-gradient(1200px 800px at 15% -10%, rgba(255, 61, 119, 0.35), transparent 55%),
+                  radial-gradient(1000px 700px at 100% 0%, rgba(6, 182, 212, 0.30), transparent 50%),
+                  radial-gradient(900px 900px at 50% 120%, rgba(255, 184, 0, 0.22), transparent 55%),
+                  linear-gradient(160deg, var(--color-bg-base) 0%, var(--color-bg-base-2) 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .blob { position: fixed; border-radius: 50%; filter: blur(90px); opacity: 0.55; z-index: 0; pointer-events: none; animation: float 14s ease-in-out infinite; }
+    .blob.one { width: 420px; height: 420px; background: var(--color-primary); top: -120px; left: -100px; }
+    .blob.two { width: 380px; height: 380px; background: var(--color-accent-cool); bottom: -140px; right: -90px; animation-delay: -5s; }
+    .blob.three { width: 300px; height: 300px; background: var(--color-tertiary); top: 40%; left: 60%; animation-delay: -9s; }
+    @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -40px) scale(1.08); } }
+    header.nav { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding: 22px clamp(20px, 5vw, 64px); }
+    .brand { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; letter-spacing: 0.3px; }
+    .brand .mark { width: 40px; height: 40px; border-radius: 12px; background: var(--grad-cta); display: grid; place-items: center; font-size: 1.1rem; color: #fff; box-shadow: 0 8px 24px rgba(255, 61, 119, 0.5); }
+    .nav-links { display: flex; gap: 26px; align-items: center; }
+    .nav-links a { color: var(--color-text-muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: color .2s; }
+    .nav-links a:hover { color: #fff; }
+    @media (max-width: 720px) { .nav-links { display: none; } }
+    .wrap { position: relative; z-index: 2; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(28px, 5vw, 72px); align-items: center; max-width: 1180px; margin: 0 auto; padding: clamp(24px, 5vw, 60px) clamp(20px, 5vw, 64px) 80px; }
+    @media (max-width: 940px) { .wrap { grid-template-columns: 1fr; padding-top: 12px; } }
+    .hero .pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; background: var(--color-surface); border: 1px solid rgba(255,255,255,0.18); backdrop-filter: blur(8px); font-size: 0.82rem; font-weight: 600; letter-spacing: 0.4px; color: #fff; }
+    .hero .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-tertiary); box-shadow: 0 0 12px var(--color-tertiary); }
+    .hero h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.4rem, 6vw, 4.1rem); line-height: 1.05; margin: 22px 0 18px; letter-spacing: -0.5px; }
+    .hero h1 .grad { background: var(--grad-text); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p.lead { font-size: clamp(1rem, 2.2vw, 1.18rem); color: var(--color-text-muted); max-width: 520px; line-height: 1.6; }
+    .stats { display: flex; gap: 30px; margin-top: 34px; flex-wrap: wrap; }
+    .stat .num { font-family: var(--font-display); font-weight: 800; font-size: 1.9rem; background: var(--grad-text); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat .label { font-size: 0.85rem; color: var(--color-text-muted); margin-top: 2px; }
+    .card { background: rgba(255, 255, 255, 0.96); border-radius: var(--radius-lg); padding: clamp(26px, 4vw, 40px); box-shadow: var(--shadow-glow); border: 1px solid rgba(255,255,255,0.6); position: relative; overflow: hidden; color: var(--color-ink); }
+    .card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 6px; background: var(--grad-hero); }
+    .card h2 { font-family: var(--font-display); font-weight: 700; font-size: 1.55rem; color: var(--color-ink); }
+    .card .sub { color: var(--color-ink-muted); margin-top: 6px; font-size: 0.95rem; }
+    .field { margin-top: 20px; }
+    .field label { display: block; font-weight: 600; font-size: 0.9rem; color: var(--color-ink); margin-bottom: 8px; }
+    .field label .req { color: var(--color-primary); }
+    .field input { width: 100%; padding: 14px 16px; border-radius: var(--radius-md); border: 2px solid #e7e3f2; background: #f8f7fc; font-size: 1rem; font-family: var(--font-body); color: var(--color-ink); transition: border-color .2s, box-shadow .2s, background .2s; }
+    .field input::placeholder { color: #a9a3c0; }
+    .field input:focus { outline: none; border-color: var(--color-secondary); background: #fff; box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.18); }
+    .field.invalid input { border-color: var(--color-error); background: #fff5f7; }
+    .field.valid input { border-color: var(--color-success); }
+    .field .error { color: var(--color-error); font-size: 0.82rem; margin-top: 6px; min-height: 1em; display: block; font-weight: 500; }
+    .submit { width: 100%; margin-top: 26px; padding: 16px 20px; border: none; border-radius: var(--radius-md); background: var(--grad-cta); color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; cursor: pointer; letter-spacing: 0.3px; box-shadow: 0 14px 34px rgba(255, 61, 119, 0.45); transition: transform .15s, box-shadow .2s, filter .2s; }
+    .submit:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.06); box-shadow: 0 20px 44px rgba(255, 61, 119, 0.55); }
+    .submit:active:not(:disabled) { transform: translateY(0); }
+    .submit:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
+    .form-note { text-align: center; margin-top: 14px; font-size: 0.82rem; color: var(--color-ink-muted); }
+    .success-box { display: none; text-align: center; padding: 22px 8px 6px; }
+    .success-box.show { display: block; animation: pop .5s ease; }
+    .success-box .check { width: 76px; height: 76px; margin: 0 auto 16px; border-radius: 50%; background: linear-gradient(135deg, #22C55E, #06B6D4); display: grid; place-items: center; font-size: 2.2rem; color: #fff; box-shadow: 0 12px 30px rgba(34, 197, 94, 0.45); }
+    .success-box h3 { font-family: var(--font-display); color: var(--color-ink); font-size: 1.5rem; }
+    .success-box p { color: var(--color-ink-muted); margin-top: 8px; }
+    .success-box button { margin-top: 20px; padding: 12px 24px; border: none; border-radius: 12px; background: var(--color-secondary); color: #fff; font-weight: 600; cursor: pointer; font-family: var(--font-body); }
+    @keyframes pop { 0% { transform: scale(.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-6px); } 40%,80% { transform: translateX(6px); } }
+    .shake { animation: shake .35s ease; }
+    footer { position: relative; z-index: 2; text-align: center; padding: 24px; color: var(--color-text-muted); font-size: 0.85rem; }
+    footer .grad { background: var(--grad-text); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="blob one"></div>
+  <div class="blob two"></div>
+  <div class="blob three"></div>
+
+  <header class="nav">
+    <div class="brand">
+      <span class="mark">M</span>
+      <span>Manthan <span style="opacity:.8">4</span> Yuwa</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#impact">Impact</a>
+      <a href="#join">Join</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" id="about">
+      <span class="pill"><span class="dot"></span> A movement for young changemakers</span>
+      <h1>Ignite your ideas. <br /><span class="grad">Join Manthan&nbsp;4&nbsp;Yuwa.</span></h1>
+      <p class="lead">
+        A vibrant youth community where energy meets purpose. Learn, lead, and build
+        real impact alongside thousands of young minds across the country.
+      </p>
+      <div class="stats" id="impact">
+        <div class="stat"><div class="num">12k+</div><div class="label">Young members</div></div>
+        <div class="stat"><div class="num">140+</div><div class="label">Cities reached</div></div>
+        <div class="stat"><div class="num">300+</div><div class="label">Community events</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="join">
+      <form id="joinForm" novalidate>
+        <h2>Become a member</h2>
+        <p class="sub">Fill in your details and join the movement in seconds.</p>
+
+        <div class="field" id="f-name">
+          <label for="name">Full name <span class="req">*</span></label>
+          <input type="text" id="name" name="name" placeholder="e.g. Aarav Sharma" autocomplete="name" />
+          <span class="error" data-for="name"></span>
+        </div>
+
+        <div class="field" id="f-email">
+          <label for="email">Email <span class="req">*</span></label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" />
+          <span class="error" data-for="email"></span>
+        </div>
+
+        <div class="field" id="f-phone">
+          <label for="phone">Phone <span class="req">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" autocomplete="tel" />
+          <span class="error" data-for="phone"></span>
+        </div>
+
+        <div class="field" id="f-city">
+          <label for="city">City <span class="req">*</span></label>
+          <input type="text" id="city" name="city" placeholder="e.g. Ahmedabad" autocomplete="address-level2" />
+          <span class="error" data-for="city"></span>
+        </div>
+
+        <button type="submit" class="submit" id="submitBtn">Join the movement &rarr;</button>
+        <p class="form-note">Your details are safe with us. No spam, ever.</p>
+      </form>
+
+      <div class="success-box" id="successBox">
+        <div class="check">&#10003;</div>
+        <h3>Welcome aboard!</h3>
+        <p>Thanks for joining Manthan 4 Yuwa. We'll be in touch very soon.</p>
+        <button type="button" id="resetBtn">Register another</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Made with <span class="grad">rich colors</span> &middot; Manthan 4 Yuwa &copy; 2026
+  </footer>
+
+  <script>
+    var rules = {
+      name: function (v) {
+        var t = v.trim();
+        if (!t) return "Please enter your name";
+        if (t.length < 2 || t.length > 80) return "Name must be 2-80 characters";
+        if (!/^[A-Za-z\u00C0-\u024F\s'.-]+$/.test(t)) return "Use letters, spaces, hyphens or apostrophes";
+        return "";
+      },
+      email: function (v) {
+        var t = v.trim();
+        if (!t) return "Please enter your email";
+        if (t.length > 254) return "Email is too long";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return "Enter a valid email address";
+        return "";
+      },
+      phone: function (v) {
+        var digits = v.replace(/[\s-]/g, "").replace(/^\+/, "");
+        if (!v.trim()) return "Please enter your phone number";
+        if (!/^\d{7,15}$/.test(digits)) return "Enter a valid phone number (7-15 digits)";
+        return "";
+      },
+      city: function (v) {
+        var t = v.trim();
+        if (!t) return "Please enter your city";
+        if (t.length < 2 || t.length > 60) return "City must be 2-60 characters";
+        if (!/^[A-Za-z\u00C0-\u024F\s.-]+$/.test(t)) return "Use letters, spaces or hyphens";
+        return "";
+      }
+    };
+
+    function normalize(values) {
+      return {
+        name: values.name.trim().replace(/\s+/g, " "),
+        email: values.email.trim().toLowerCase(),
+        phone: (values.phone.trim().charAt(0) === "+" ? "+" : "") + values.phone.replace(/[\s-]/g, "").replace(/^\+/, ""),
+        city: values.city.trim().replace(/\s+/g, " ")
+      };
+    }
+
+    var form = document.getElementById("joinForm");
+    var submitBtn = document.getElementById("submitBtn");
+    var successBox = document.getElementById("successBox");
+    var fields = ["name", "email", "phone", "city"];
+
+    function setError(field, msg) {
+      var wrap = document.getElementById("f-" + field);
+      var errEl = document.querySelector('.error[data-for="' + field + '"]');
+      errEl.textContent = msg;
+      wrap.classList.toggle("invalid", !!msg);
+      wrap.classList.toggle("valid", !msg && document.getElementById(field).value.trim() !== "");
+    }
+
+    fields.forEach(function (field) {
+      var input = document.getElementById(field);
+      input.addEventListener("blur", function () { setError(field, rules[field](input.value)); });
+      input.addEventListener("input", function () {
+        var wrap = document.getElementById("f-" + field);
+        if (wrap.classList.contains("invalid")) setError(field, rules[field](input.value));
+      });
+    });
+
+    function saveRegistration(record) {
+      try {
+        var key = "m4y_registrations";
+        var list = JSON.parse(localStorage.getItem(key) || "[]");
+        var id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now());
+        list.push(Object.assign({ id: id }, record, { createdAt: new Date().toISOString(), source: "join-page" }));
+        localStorage.setItem(key, JSON.stringify(list));
+        return true;
+      } catch (e) { return false; }
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var values = {};
+      var firstInvalid = null;
+      var hasError = false;
+
+      fields.forEach(function (field) {
+        var val = document.getElementById(field).value;
+        values[field] = val;
+        var msg = rules[field](val);
+        setError(field, msg);
+        if (msg) { hasError = true; if (!firstInvalid) firstInvalid = field; }
+      });
+
+      if (hasError) {
+        submitBtn.classList.remove("shake");
+        void submitBtn.offsetWidth;
+        submitBtn.classList.add("shake");
+        if (firstInvalid) document.getElementById(firstInvalid).focus();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Joining...";
+      var normalized = normalize(values);
+      saveRegistration(normalized);
+
+      setTimeout(function () {
+        form.style.display = "none";
+        successBox.classList.add("show");
+      }, 500);
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", function () {
+      form.reset();
+      fields.forEach(function (f) { setError(f, ""); });
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = "Join the movement &rarr;";
+      successBox.classList.remove("show");
+      form.style.display = "block";
+    });
+  </script>
+</body>
+</html>
